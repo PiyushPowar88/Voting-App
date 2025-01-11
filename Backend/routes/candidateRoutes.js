@@ -67,6 +67,23 @@ router.put("/candidateID", jwtAuthMiddleware, async (req, res) => {
   }
 });
 
+//get the candidate id 
+// router.get('/candidateId/vote',jwtAuthMiddleware, async(req,res)=>{
+//   try {
+//     const candidateId = req.params.id;
+//     const candidate = await Candidate.findById(candidateId);
+
+//     if (!candidate) {
+//       return res.status(404).json({ error: "Candidate not found" });
+//     }
+//     res.status(200).json({ candidate });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: "Internal Server Error" });
+
+//   }
+// })
+
 router.delete("/candidateID", jwtAuthMiddleware, async (req, res) => {
   try {
     if (!checkAdminRole(req.user.id)) {
@@ -150,17 +167,18 @@ router.get('/vote/count', async (req, res) => {
 });
 
 
-router.get('/listcandidates', async(req, res) =>{
-
+router.get('/listcandidates', async (req, res) => {
   try {
-    // list of candidates
-    const candidates = await Candidate.find({}, 'name party -_id');
-      // Return the list of candidates
-      res.status(200).json(candidates);
+    // list of candidates with name, party, and id
+    const candidates = await Candidate.find({}, 'name party _id');
+
+    // Return the list of candidates
+    res.status(200).json(candidates);
   } catch (error) {
-    console.log(error); // Corrected to log 'error'
+    console.error(error); // Corrected to log 'error'
     res.status(500).json({ error: "Internal Server Error" });
   }
-})
+});
+
 
 export default router;

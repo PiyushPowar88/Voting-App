@@ -5,11 +5,15 @@ import dotenv from 'dotenv';
 import userRoutes from './routes/userRoutes.js';
 import candidateRoute from './routes/candidateRoutes.js';
 import { jwtAuthMiddleware } from './jwt/jsonWebToken.js';
+import cors from 'cors';
 dotenv.config();
 
 const app = express();
 
 app.use(bodyParser.json());//req.body
+
+
+app.use(cors({ origin: 'http://localhost:5173' }));
 
 //use routes 
 app.use('/user', userRoutes)

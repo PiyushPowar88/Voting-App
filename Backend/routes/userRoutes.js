@@ -5,31 +5,35 @@ import { jwtAuthMiddleware, genrateJwtToken } from "../jwt/jsonWebToken.js";
 const router = express.Router();
 
 // POST route to add a user
-router.post('/signup', async (req, res) =>{
-    try{
-        const data = req.body // Assuming the request body contains the person data
+router.post('/signup', async (req, res) => {
+    try {
+        const { name, age, email, mobile, address, addharCardNumber, password } = req.body;
 
-        // Create a new Person document using the Mongoose model
-        const newUser = new User(data);
+        // Ensure all required fields are provided
+        if (!name || !address || !addharCardNumber || !password) {
+            return res.status(400).json({ error: 'All required fields must be provided.' });
+        }
 
-        // Save the new person to the database
+        // Create a new User document using the Mongoose model
+        const newUser = new User(req.body);
+
+        // Save the new user to the database
         const response = await newUser.save();
         console.log('data saved');
 
-        const payload = {
-            id: response.id,
-        }
+        const payload = { id: response.id };
         console.log(JSON.stringify(payload));
-        const token = genrateJwtToken(payload);
-        console.log("Token is : ", token);
 
-        res.status(200).json({response: response, token: token});
-    }
-    catch(err){
+        const token = genrateJwtToken(payload);  // Ensure this function is correctly defined somewhere in your backend
+        console.log("Token is: ", token);
+
+        // Send the response back with the user data and token
+        res.status(200).json({ response: response, token: token });
+    } catch (err) {
         console.log(err);
-        res.status(500).json({error: 'Internal Server Error'});
+        res.status(500).json({ error: 'Internal Server Error' });
     }
-})
+});
 
 // Login Route
 router.post('/login', async(req, res) => {

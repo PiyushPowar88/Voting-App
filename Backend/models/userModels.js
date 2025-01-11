@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema({
     addharCardNumber:{
         type: String,
         required: true,
-        unique: true
+        // unique: true
     },
     password:{
         type: String,
